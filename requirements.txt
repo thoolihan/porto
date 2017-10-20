@@ -1,5 +1,9 @@
 bleach==2.1.1
+boto3==1.4.7
+botocore==1.7.33
+cycler==0.10.0
 decorator==4.1.2
+docutils==0.14
 entrypoints==0.2.3
 html5lib==0.9999999
 ipykernel==4.6.1
@@ -7,6 +11,7 @@ ipython==6.2.1
 ipython-genutils==0.2.0
 ipywidgets==7.0.3
 jedi==0.11.0
+jmespath==0.9.3
 jsonschema==2.6.0
 jupyter==1.0.0
 jupyter-client==5.1.0
@@ -22,8 +27,11 @@ pexpect==4.2.1
 pickleshare==0.7.4
 prompt-toolkit==1.0.15
 ptyprocess==0.5.2
+pyparsing==2.2.0
 python-dateutil==2.6.1
+pytz==2017.2
 qtconsole==4.3.1
+s3transfer==0.1.11
 simplegeneric==0.8.1
 six==1.11.0
 sklearn==0.0
