@@ -21,4 +21,7 @@ def load_file(description = "train"):
             logger.info("Exception getting file {}/{} from S3".format(cfg["bucket"], cfg["file"]))
     else:
         logger.info("Using already cached file {}".format(local_file))
-    return pd.read_csv(local_file, index_col = "id")
+    df = pd.read_csv(local_file, index_col = "id")
+    if 'target' in df.columns:
+        df.target  = df.target.astype('int')
+    return df
