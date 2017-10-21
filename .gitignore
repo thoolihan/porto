@@ -2,3 +2,4 @@ data/*.csv
 logs/*.txt
 config.json
 *-checkpoint.ipynb
+__pycache__/
