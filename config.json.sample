@@ -13,6 +13,10 @@
     "sample": {
       "bucket": "thoolihan-data",
       "file": "Kaggle/PortoSeguro/sample_submission.csv"
+    },
+    "chi2": {
+      "bucket": "thoolihan-data",
+      "file": "Kaggle/PortoSeguro/chi2_features.csv"
     }
   }
 }
