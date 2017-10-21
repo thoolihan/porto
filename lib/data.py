@@ -22,6 +22,10 @@ def load_file(description = "train"):
     else:
         logger.info("Using already cached file {}".format(local_file))
     df = pd.read_csv(local_file, index_col = "id")
-    if 'target' in df.columns:
-        df.target  = df.target.astype('int')
+    return df
+
+def convert_columns_to_int(df, columns):
+    for col in columns:
+        if col in df:
+            df[col] = df[col].astype('int')
     return df

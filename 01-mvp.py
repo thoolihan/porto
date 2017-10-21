@@ -1,4 +1,4 @@
-from lib.data import load_file
+from lib.data import load_file, convert_columns_to_int
 from lib.submit import write_submission_file
 from lib.logger import get_logger
 from sklearn.pipeline import make_pipeline
@@ -14,10 +14,11 @@ def n_best(chdf, n = 15):
     sorted = chdf.sort_values('chi2', axis = 0, ascending = False)
     return sorted['feature'][:n]
 
-columns = list(n_best(chi2_df))
+columns = n_best(chi2_df)
 
 # training data
-train = load_file()
+bit_columns = ['target']
+train = convert_columns_to_int(load_file(), bit_columns)
 X = train[columns]
 y = train.target
 
