@@ -1,6 +1,7 @@
 from lib.data import load_file, convert_columns_to_int
 from lib.submit import write_submission_file
 from lib.logger import get_logger
+from lib.porto.feature_type import get_bin_cat_features
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -14,11 +15,13 @@ def n_best(chdf, n = 15):
     sorted = chdf.sort_values('chi2', axis = 0, ascending = False)
     return sorted['feature'][:n]
 
-columns = n_best(chi2_df)
+columns = n_best(chi2_df, n = 20)
 
 # training data
-bit_columns = ['target']
-train = convert_columns_to_int(load_file(), bit_columns)
+train = load_file()
+bit_columns = get_bin_cat_features(train)
+bit_columns.append('target')
+train = convert_columns_to_int(train, bit_columns)
 X = train[columns]
 y = train.target
 
