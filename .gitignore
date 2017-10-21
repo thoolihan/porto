@@ -1,0 +1,4 @@
+data/*.csv
+logs/*.txt
+config.json
+*-checkpoint.ipynb

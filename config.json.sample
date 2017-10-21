@@ -1,0 +1,18 @@
+{
+  "name": "Porto Seguro Kaggle",
+  "url": "https://www.kaggle.com/c/porto-seguro-safe-driver-prediction/",
+  "data-files": {
+    "train": {
+      "bucket": "thoolihan-data",
+      "file": "Kaggle/PortoSeguro/train.csv"
+    },
+    "test": {
+      "bucket": "thoolihan-data",
+      "file": "Kaggle/PortoSeguro/test.csv"
+    },
+    "sample": {
+      "bucket": "thoolihan-data",
+      "file": "Kaggle/PortoSeguro/sample_submission.csv"
+    }
+  }
+}
