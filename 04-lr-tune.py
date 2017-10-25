@@ -27,9 +27,9 @@ pipe = Pipeline([('impute', Imputer(missing_values = -1)),
                  ('model', LogisticRegression())])
 param_grid = {
     'impute__strategy': ["most_frequent"],
-    'decompose__n_components': [20],
+    'decompose__n_components': [30],
     'model': [LogisticRegression()],
-    'model__C': [.5, .75, 1.],
+    'model__C': [.4, .5, .6],
     'model__n_jobs': [1]
 }
 
