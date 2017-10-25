@@ -42,6 +42,7 @@ model.add(Activation('relu'))
 model.add(Dense(units = 64, input_dim = n))
 model.add(Activation('relu'))
 model.add(Dense(units = 1))
+model.add(Activation('linear'))
 
 model.compile(loss='sparse_categorical_crossentropy',
               optimizer='sgd',
@@ -51,15 +52,15 @@ logger.info("Fitting model on X_train...")
 model.fit(X_train, y_train, epochs = cfg["epochs"], batch_size = cfg["batch_size"])
 
 logger.info("Predicting on X_val...")
-results = model.predict_proba(X_val)
-score = gini_normalized(y_val, results)
+results_val = model.predict(X_val)
+score = gini_normalized(y_val, results_val)
 logger.info("normalized gini score on validation set is {}".format(score))
 
 logger.info("Loading and predicting on Test set...")
-test = pipe.transform(load_file("test"))
-results = model.predict_proba(test)
-test = pd.DataFrame(test)
-test['target'] = results
+test = load_file("test")
+X_test = pipe.transform(test)
+results_test = model.predict(X_test)
+test['target'] = results_test
 write_submission_file(test, columns = ['target'], name = 'keras-v1')
 
 logger.info("Finished with time {}".format(datetime.now() - start))
