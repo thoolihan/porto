@@ -11,16 +11,16 @@ from lib.scoring.gini import gini_normalized
 
 logger = get_logger()
 
-# training data
+logger.info("Loading training data into X and y...")
 train = load_file()
 X = train.drop(['target'], axis = 1)
 y = train.target
 
-# bump all values up 1, so missing is now zero
+logger.info("Bumping all values up 1, so missing is now zero...")
 cat_columns = get_cat_features_idx(X)
 X = make_missing_zero(X, cat_columns)
 
-# make a pipeline
+logger.info("Making pipeline...")
 pipe = Pipeline([('encode', OneHotEncoder(categorical_features=cat_columns, handle_unknown = 'ignore')),
                  ('to_dense', FunctionTransformer(lambda x: x.todense(), accept_sparse=True)),
                  ('model', LogisticRegression())])
@@ -31,15 +31,19 @@ param_grid = {
     'model__solver': ['sag', 'saga'],
 }
 
+logger.info("Finding best parameters...")
 model = GridSearchCV(pipe, param_grid, scoring = 'roc_auc')
+
+logger.info("Fitting on X...")
 model.fit(X.as_matrix(), y)
 logger.info("Best Params: {}".format(model.best_params_))
 
+logger.info("Cross-val predict scoring on X...")
 results = cross_val_predict(model, X, y, method = 'predict_proba')[:, 1]
 score = gini_normalized(y, results)
-logger.info("Cross-val normalized gini score on training set is {}".format(score))
+logger.info("normalized gini score on training set is {}".format(score))
 
-# predict
+logger.info("Loading and predicting on Test set...")
 test = make_missing_zero(load_file("test"), cat_columns)
 test['target'] = model.predict_proba(test.as_matrix())[:, 1]
 write_submission_file(test, columns = ['target'], name = 'ohe-cv-pipe')
