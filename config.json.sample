@@ -1,6 +1,8 @@
 {
   "name": "Porto Seguro Kaggle",
   "url": "https://www.kaggle.com/c/porto-seguro-safe-driver-prediction/",
+  "epochs": 2,
+  "batch_size": 100,
   "data-files": {
     "train": {
       "bucket": "thoolihan-data",
