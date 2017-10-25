@@ -30,7 +30,7 @@ pipe = make_pipeline(StandardScaler(), LogisticRegression())
 pipe.fit(X, y)
 
 # test data
-test = load_file("test")
+test = convert_columns_to_int(load_file("test"), bit_columns)
 X_test = test[columns]
 
 # predict
