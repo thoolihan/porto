@@ -5,6 +5,7 @@ from lib.porto.feature_type import get_cat_features_idx
 from lib.scoring.gini import gini_normalized
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer, OneHotEncoder, Imputer
+from sklearn.decomposition import TruncatedSVD
 from sklearn.model_selection import cross_val_predict, GridSearchCV
 from sklearn.linear_model import LogisticRegression
 from datetime import datetime
@@ -21,10 +22,12 @@ cat_columns = get_cat_features_idx(X)
 logger.info("Making pipeline...")
 pipe = Pipeline([('impute', Imputer(missing_values = -1)),
                  ('encode', OneHotEncoder(categorical_features=cat_columns, handle_unknown = 'ignore')),
+                 ('decompose', TruncatedSVD()),
                  ('to_dense', FunctionTransformer(lambda x: x.todense(), accept_sparse=True)),
                  ('model', LogisticRegression())])
 param_grid = {
     'impute__strategy': ["most_frequent"],
+    'decompose__n_compontents': [45],
     'model': [LogisticRegression()],
     'model__C': [1.],
     'model__n_jobs': [1]
