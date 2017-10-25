@@ -7,7 +7,7 @@ from sklearn.preprocessing import FunctionTransformer, OneHotEncoder
 from sklearn.model_selection import cross_val_predict, GridSearchCV
 from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import LogisticRegression
-from scoring.gini import gini_normalized
+from lib.scoring.gini import gini_normalized
 
 logger = get_logger()
 

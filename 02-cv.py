@@ -6,7 +6,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import cross_val_predict, GridSearchCV
-from scoring.gini import gini_normalized
+from lib.scoring.gini import gini_normalized
 
 logger = get_logger()
 
