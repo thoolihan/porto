@@ -35,10 +35,10 @@ logger.info("Creating Keras Model...")
 model = Sequential()
 model.add(Dense(units = 64, input_dim = n))
 model.add(Activation('relu'))
-model.add(Dense(units = 2))
+model.add(Dense(units = 1))
 model.add(Activation('softmax'))
 
-model.compile(loss='categorical_crossentropy',
+model.compile(loss='sparse_categorical_crossentropy',
               optimizer='sgd',
               metrics=['accuracy'])
 
