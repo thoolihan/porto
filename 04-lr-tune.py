@@ -1,14 +1,15 @@
 from lib.data import load_file, convert_columns_to_int, make_missing_zero
 from lib.submit import write_submission_file
 from lib.logger import get_logger
-from lib.porto.feature_type import get_bin_cat_features, get_cat_features_idx
+from lib.porto.feature_type import get_cat_features_idx
+from lib.scoring.gini import gini_normalized
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer, OneHotEncoder
 from sklearn.model_selection import cross_val_predict, GridSearchCV
-from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import LogisticRegression
-from lib.scoring.gini import gini_normalized
+from datetime import datetime
 
+start = datetime.now()
 logger = get_logger()
 
 logger.info("Loading training data into X and y...")
@@ -31,14 +32,14 @@ param_grid = {
     'model__solver': ['sag', 'saga'],
 }
 
-logger.info("Finding best parameters...")
+logger.info("Finding best parameters with GridSearchCV...")
 model = GridSearchCV(pipe, param_grid, scoring = 'roc_auc')
 
-logger.info("Fitting on X...")
+logger.info("Fitting model on X...")
 model.fit(X.as_matrix(), y)
 logger.info("Best Params: {}".format(model.best_params_))
 
-logger.info("Cross-val predict scoring on X...")
+logger.info("Predicting score (w/Cross-Val) on X...")
 results = cross_val_predict(model, X, y, method = 'predict_proba')[:, 1]
 score = gini_normalized(y, results)
 logger.info("normalized gini score on training set is {}".format(score))
@@ -47,3 +48,5 @@ logger.info("Loading and predicting on Test set...")
 test = make_missing_zero(load_file("test"), cat_columns)
 test['target'] = model.predict_proba(test.as_matrix())[:, 1]
 write_submission_file(test, columns = ['target'], name = 'ohe-cv-pipe')
+
+logger.info("Finished with time {}".format(start - datetime.now()))
