@@ -29,3 +29,7 @@ def convert_columns_to_int(df, columns):
         if col in df:
             df[col] = df[col].astype('int')
     return df
+
+def make_missing_zero(df, columns):
+    df.iloc[:, columns] += 1
+    return df
