@@ -27,8 +27,8 @@ pipe = Pipeline([('encode', OneHotEncoder(categorical_features=cat_columns, hand
                  ('model', LogisticRegression())])
 param_grid = {
     'model': [LogisticRegression()],
-    'model__C': [.25, .5, 1., 1.5],
-    'model__n_jobs': 4,
+    'model__C': [1.],
+    'model__n_jobs': [4],
     'model__solver': ['sag', 'saga'],
 }
 
