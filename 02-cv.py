@@ -4,8 +4,7 @@ from lib.logger import get_logger
 from lib.porto.feature_type import get_bin_cat_features
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import cross_val_predict, GridSearchCV
 from scoring.gini import gini_normalized
 
@@ -21,18 +20,18 @@ y = train.target
 
 # make a pipeline
 pipe = Pipeline([('transform', StandardScaler()),
-                 ('model', LogisticRegression())])
+                 ('model', GaussianNB())])
 
-param_grid = {}
+param_grid = {
     # 'model': [
-    #     LogisticRegression(),
+    #     GaussianNB(),
     #     KNeighborsClassifier(n_neighbors=5)
     # ]
-#}
+}
 
-model = GridSearchCV(pipe, param_grid, scoring = 'f1')
+model = GridSearchCV(pipe, param_grid, scoring = 'roc_auc')
 model.fit(X, y)
-logger.info(model.best_params_)
+logger.info("Best Params: {}".format(model.best_params_))
 
 results = cross_val_predict(model, X, y, method = 'predict_proba')[:, 1]
 score = gini_normalized(y, results)
@@ -42,6 +41,5 @@ logger.info("Cross-val normalized gini score on training set is {}".format(score
 X_test = convert_columns_to_int(load_file("test"), bit_columns)
 
 # predict
-y_test_pred = model.predict_proba(X_test)
-X_test['target'] = y_test_pred[:,1]
+X_test['target'] = model.predict_proba(X_test)[:, 1]
 write_submission_file(X_test, columns = ['target'], name = 'cv-mvp')
