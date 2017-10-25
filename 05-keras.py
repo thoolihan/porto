@@ -35,10 +35,13 @@ X_train, X_val, y_train, y_val = train_test_split(X, y, test_size = .3)
 
 logger.info("Creating Keras Model...")
 model = Sequential()
+model.add(Dense(units = n, input_dim = n))
+model.add(Activation('relu'))
+model.add(Dense(units = 64, input_dim = n))
+model.add(Activation('relu'))
 model.add(Dense(units = 64, input_dim = n))
 model.add(Activation('relu'))
 model.add(Dense(units = 1))
-model.add(Activation('softmax'))
 
 model.compile(loss='sparse_categorical_crossentropy',
               optimizer='sgd',
@@ -57,6 +60,6 @@ test = pipe.transform(load_file("test"))
 results = model.predict_proba(test)
 test = pd.DataFrame(test)
 test['target'] = results
-write_submission_file(test, columns = ['target'], name = 'ohe-cv-pipe')
+write_submission_file(test, columns = ['target'], name = 'keras-v1')
 
 logger.info("Finished with time {}".format(datetime.now() - start))
