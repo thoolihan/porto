@@ -19,7 +19,7 @@ y = train.target
 cat_columns = get_cat_features_idx(X)
 
 logger.info("Making pipeline...")
-pipe = Pipeline([('impute', Imputer(missing_values=-1))
+pipe = Pipeline([('impute', Imputer(missing_values = -1)),
                  ('encode', OneHotEncoder(categorical_features=cat_columns, handle_unknown = 'ignore')),
                  ('to_dense', FunctionTransformer(lambda x: x.todense(), accept_sparse=True)),
                  ('model', LogisticRegression())])
