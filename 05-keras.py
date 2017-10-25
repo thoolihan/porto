@@ -41,11 +41,12 @@ model.add(Dense(units = 64, input_dim = n))
 model.add(Activation('relu'))
 model.add(Dense(units = 64, input_dim = n))
 model.add(Activation('relu'))
+model.add(Dense(units = 64, input_dim = n))
+model.add(Activation('relu'))
 model.add(Dense(units = 1))
-model.add(Activation('linear'))
 
-model.compile(loss='sparse_categorical_crossentropy',
-              optimizer='sgd',
+model.compile(loss='mse',
+              optimizer='adam',
               metrics=['accuracy'])
 
 logger.info("Fitting model on X_train...")
