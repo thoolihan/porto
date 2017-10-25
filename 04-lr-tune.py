@@ -47,4 +47,4 @@ test = load_file("test")
 test['target'] = model.predict_proba(test.as_matrix())[:, 1]
 write_submission_file(test, columns = ['target'], name = 'ohe-cv-pipe')
 
-logger.info("Finished with time {}".format(start - datetime.now()))
+logger.info("Finished with time {}".format(datetime.now() - start))
