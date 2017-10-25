@@ -33,14 +33,17 @@ model.add(Dense(units = 64, input_dim = n))
 model.add(Activation('relu'))
 model.add(Dense(units = 64, input_dim = n))
 model.add(Activation('relu'))
+model.add(Dense(units = 64, input_dim = n))
+model.add(Activation('relu'))
 model.add(Dense(units = 1))
+model.add(Activation('sigmoid'))
 
 model.compile(loss='mse',
               optimizer='adam',
               metrics=['accuracy'])
 
 logger.info("Fitting model on X_train...")
-model.fit(X_train.as_matrix(), y_train, epochs = cfg["epochs"], batch_size = cfg["batch_size"])
+history = model.fit(X_train.as_matrix(), y_train, epochs = cfg["epochs"], batch_size = cfg["batch_size"])
 
 logger.info("Predicting on X_val...")
 results_val = model.predict(X_val.as_matrix())
