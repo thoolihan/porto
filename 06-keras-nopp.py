@@ -10,7 +10,7 @@ from sklearn.preprocessing import OneHotEncoder, Imputer, FunctionTransformer
 from sklearn.model_selection import train_test_split
 from datetime import datetime
 from keras.models import Sequential
-from keras.layers import Dense, Activation
+from keras.layers import Dense, Activation, Dropout
 
 start = datetime.now()
 cfg = get_config()
@@ -26,14 +26,19 @@ X_train, X_val, y_train, y_val = train_test_split(X, y, test_size = .3)
 logger.info("Creating Keras Model...")
 model = Sequential()
 model.add(Dense(units = n, input_dim = n))
+model.add(Dropout(cfg["dropout"]))
 model.add(Activation('relu'))
 model.add(Dense(units = 64, input_dim = n))
+model.add(Dropout(cfg["dropout"]))
 model.add(Activation('relu'))
 model.add(Dense(units = 64, input_dim = n))
+model.add(Dropout(cfg["dropout"]))
 model.add(Activation('relu'))
 model.add(Dense(units = 64, input_dim = n))
+model.add(Dropout(cfg["dropout"]))
 model.add(Activation('relu'))
 model.add(Dense(units = 64, input_dim = n))
+model.add(Dropout(cfg["dropout"]))
 model.add(Activation('relu'))
 model.add(Dense(units = 1))
 model.add(Activation('sigmoid'))
