@@ -8,6 +8,8 @@ from datetime import datetime
 from keras.models import Sequential
 from keras.layers import Dense, Activation, Dropout
 from keras.optimizers import Adam
+from matplotlib import pyplot as plt
+plt.style.use('ggplot')
 
 start = datetime.now()
 cfg = get_config()
@@ -27,7 +29,7 @@ model.add(Dense(units = 128, input_dim = n))
 model.add(Activation('relu'))
 model.add(Dropout(cfg["dropout"]))
 
-for _ in range(9):
+for _ in range(13):
     model.add(Dense(units = 128))
     model.add(Activation('relu'))
     model.add(Dropout(cfg["dropout"]))
@@ -36,7 +38,7 @@ model.add(Dense(units = 1))
 model.add(Activation('sigmoid'))
 
 adam = Adam(lr = cfg["lr"])
-model.compile(loss='mean_squared_error',
+model.compile(loss='mse',
               optimizer=adam,
               metrics=['accuracy'])
 
@@ -55,3 +57,10 @@ X_test['target'] = model.predict(X_test.as_matrix())
 write_submission_file(X_test, columns = ['target'], name = 'keras-v2')
 
 logger.info("Finished with time {}".format(datetime.now() - start))
+
+plt.plot(history.history['loss'])
+plt.ylabel("loss")
+plt.xlabel("epoch")
+plt.title("loss by epoch")
+if not(cfg["cli"]):
+    plt.show()
