@@ -10,7 +10,7 @@ from sklearn.preprocessing import OneHotEncoder, Imputer, FunctionTransformer
 from sklearn.model_selection import train_test_split
 from datetime import datetime
 from keras.models import Sequential
-from keras.layers import Dense, Activation
+from keras.layers import Dense, Activation, Dropout
 
 start = datetime.now()
 cfg = get_config()
@@ -19,6 +19,7 @@ logger = get_logger()
 logger.info("Loading training data into X and y...")
 train = load_file()
 X = train.drop(['target'], axis = 1)
+X['bias'] = 1
 y = train.target
 cat_columns = get_cat_features_idx(X)
 
@@ -37,13 +38,26 @@ logger.info("Creating Keras Model...")
 model = Sequential()
 model.add(Dense(units = n, input_dim = n))
 model.add(Activation('relu'))
+model.add(Dropout(cfg["dropout"]))
+
 model.add(Dense(units = 64, input_dim = n))
 model.add(Activation('relu'))
+model.add(Dropout(cfg["dropout"]))
+
 model.add(Dense(units = 64, input_dim = n))
 model.add(Activation('relu'))
+model.add(Dropout(cfg["dropout"]))
+
 model.add(Dense(units = 64, input_dim = n))
 model.add(Activation('relu'))
+model.add(Dropout(cfg["dropout"]))
+
+model.add(Dense(units = 64, input_dim = n))
+model.add(Activation('relu'))
+model.add(Dropout(cfg["dropout"]))
+
 model.add(Dense(units = 1))
+model.add(Activation('sigmoid'))
 
 model.compile(loss='mse',
               optimizer='adam',
@@ -59,6 +73,7 @@ logger.info("normalized gini score on validation set is {}".format(score))
 
 logger.info("Loading and predicting on Test set...")
 test = load_file("test")
+test["bias"] = 1
 X_test = pipe.transform(test)
 results_test = model.predict(X_test)
 test['target'] = results_test
