@@ -2,15 +2,12 @@ from lib.data import load_file
 from lib.submit import write_submission_file
 from lib.logger import get_logger
 from lib.config import get_config
-from lib.porto.feature_type import get_cat_features_idx
 from lib.scoring.gini import gini_normalized
-import pandas as pd
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OneHotEncoder, Imputer, FunctionTransformer
 from sklearn.model_selection import train_test_split
 from datetime import datetime
 from keras.models import Sequential
 from keras.layers import Dense, Activation, Dropout
+from keras.optimizers import Adam
 
 start = datetime.now()
 cfg = get_config()
@@ -26,31 +23,21 @@ X_train, X_val, y_train, y_val = train_test_split(X, y, test_size = .3)
 
 logger.info("Creating Keras Model...")
 model = Sequential()
-model.add(Dense(units = n, input_dim = n))
+model.add(Dense(units = 128, input_dim = n))
 model.add(Activation('relu'))
 model.add(Dropout(cfg["dropout"]))
 
-model.add(Dense(units = 64, input_dim = n))
-model.add(Activation('relu'))
-model.add(Dropout(cfg["dropout"]))
-
-model.add(Dense(units = 64, input_dim = n))
-model.add(Activation('relu'))
-model.add(Dropout(cfg["dropout"]))
-
-model.add(Dense(units = 64, input_dim = n))
-model.add(Activation('relu'))
-model.add(Dropout(cfg["dropout"]))
-
-model.add(Dense(units = 64, input_dim = n))
-model.add(Activation('relu'))
-model.add(Dropout(cfg["dropout"]))
+for _ in range(9):
+    model.add(Dense(units = 128))
+    model.add(Activation('relu'))
+    model.add(Dropout(cfg["dropout"]))
 
 model.add(Dense(units = 1))
 model.add(Activation('sigmoid'))
 
-model.compile(loss='mse',
-              optimizer='adam',
+adam = Adam(lr = cfg["lr"])
+model.compile(loss='mean_squared_error',
+              optimizer=adam,
               metrics=['accuracy'])
 
 logger.info("Fitting model on X_train...")
@@ -65,6 +52,6 @@ logger.info("Loading and predicting on Test set...")
 X_test = load_file("test")
 X_test["bias"] = 1
 X_test['target'] = model.predict(X_test.as_matrix())
-write_submission_file(X_test, columns = ['target'], name = 'keras-v1')
+write_submission_file(X_test, columns = ['target'], name = 'keras-v2')
 
 logger.info("Finished with time {}".format(datetime.now() - start))
