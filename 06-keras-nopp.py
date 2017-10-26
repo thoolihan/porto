@@ -19,6 +19,7 @@ logger = get_logger()
 logger.info("Loading training data into X and y...")
 train = load_file()
 X = train.drop(['target'], axis = 1)
+X["bias"] = 1
 y = train.target
 n = X.shape[1]
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size = .3)
@@ -26,20 +27,25 @@ X_train, X_val, y_train, y_val = train_test_split(X, y, test_size = .3)
 logger.info("Creating Keras Model...")
 model = Sequential()
 model.add(Dense(units = n, input_dim = n))
-model.add(Dropout(cfg["dropout"]))
 model.add(Activation('relu'))
+model.add(Dropout(cfg["dropout"]))
+
 model.add(Dense(units = 64, input_dim = n))
-model.add(Dropout(cfg["dropout"]))
 model.add(Activation('relu'))
+model.add(Dropout(cfg["dropout"]))
+
 model.add(Dense(units = 64, input_dim = n))
-model.add(Dropout(cfg["dropout"]))
 model.add(Activation('relu'))
+model.add(Dropout(cfg["dropout"]))
+
 model.add(Dense(units = 64, input_dim = n))
-model.add(Dropout(cfg["dropout"]))
 model.add(Activation('relu'))
+model.add(Dropout(cfg["dropout"]))
+
 model.add(Dense(units = 64, input_dim = n))
-model.add(Dropout(cfg["dropout"]))
 model.add(Activation('relu'))
+model.add(Dropout(cfg["dropout"]))
+
 model.add(Dense(units = 1))
 model.add(Activation('sigmoid'))
 
@@ -57,6 +63,7 @@ logger.info("normalized gini score on validation set is {}".format(score))
 
 logger.info("Loading and predicting on Test set...")
 X_test = load_file("test")
+X_test["bias"] = 1
 X_test['target'] = model.predict(X_test.as_matrix())
 write_submission_file(X_test, columns = ['target'], name = 'keras-v1')
 
