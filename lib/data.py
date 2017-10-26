@@ -9,7 +9,7 @@ logger = get_logger()
 def load_file(description = "train"):
     cfg = get_config()["data-files"][description]
     fname = cfg["file"].split("/")[-1]
-    local_file = "data/{}".format(fname)
+    local_file = "./data/{}".format(fname)
 
     if not(Path(local_file).exists()):
         s3 = boto3.resource('s3')
@@ -19,6 +19,7 @@ def load_file(description = "train"):
             logger.info("Wrote {}".format(local_file))
         except Exception as e:
             logger.info("Exception getting file {}/{} from S3".format(cfg["bucket"], cfg["file"]))
+            raise
     else:
         logger.info("Using already cached file {}".format(local_file))
     df = pd.read_csv(local_file, index_col = "id")
