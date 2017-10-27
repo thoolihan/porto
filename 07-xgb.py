@@ -4,7 +4,7 @@ from lib.logger import get_logger
 from lib.config import get_config
 from lib.scoring.gini import gini_normalized
 from sklearn.pipeline import Pipeline
-from sklearn.model_selection import cross_val_predict
+from sklearn.model_selection import cross_val_predict, GridSearchCV
 from xgboost import XGBClassifier
 from datetime import datetime
 
@@ -20,7 +20,7 @@ logger.info("Making GridSearchCV Pipeline...")
 pipe = Pipeline([('model', XGBClassifier())])
 param_grid = {}
 
-model = GridSearchCV(pipe, param_grid, scoring = 'auc')
+model = GridSearchCV(pipe, param_grid, scoring = 'roc_auc')
 
 logger.info("Fitting model on X...")
 model.fit(X, y)
@@ -37,4 +37,3 @@ test['target'] = model.predict_proba(test)[:, 1]
 write_submission_file(test, columns = ['target'], name = 'xgb-v1')
 
 logger.info("Finished with time {}".format(datetime.now() - start))
-
