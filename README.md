@@ -18,4 +18,6 @@ There is a `make clean` task to delete any unwanted submission files.
 
 ### Contact ###
 
-* [Tim Hoolihan](tim@hoolihan.net)
+* Tim Hoolihan
+  * [twitter](https://twitter.com/thoolihan)
+  * [github](https://github.com/thoolihan)
