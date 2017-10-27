@@ -25,10 +25,10 @@ logger.info("Making GridSearchCV Pipeline...")
 pipe = Pipeline([('drops', FunctionTransformer(lambda mat: np.delete(mat, drop_idx, axis = 1))),
                  ('model', XGBClassifier())])
 param_grid = {
-    'model__learning_rate': [0.03, 0.1, 0.2],
-    'model__reg_alpha': [0.25, 0.5, 0.75],
-    'model__reg_lambda': [0.25, 0.5, 0.75],
-    'model__max_depth': range(5)
+    'model__learning_rate': [0.095, 0.1, 0.15],
+    'model__reg_alpha': [0.15, 0.25, 0.35],
+    'model__reg_lambda': [0.6, 0.75, 0.9],
+    'model__max_depth': range(3,7)
 }
 
 model = GridSearchCV(pipe, param_grid, scoring = 'roc_auc')
