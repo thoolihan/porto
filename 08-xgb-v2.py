@@ -6,6 +6,7 @@ from lib.scoring.gini import gini_normalized
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer, Imputer
 from sklearn.model_selection import cross_val_predict, GridSearchCV
+from scipy.sparse import csc_matrix
 from xgboost import XGBClassifier
 import numpy as np
 from datetime import datetime
@@ -23,7 +24,12 @@ y = train.target
 logger.info("Making GridSearchCV Pipeline...")
 pipe = Pipeline([('drops', FunctionTransformer(lambda mat: np.delete(mat, drop_idx, axis = 1))),
                  ('model', XGBClassifier())])
-param_grid = {}
+param_grid = {
+    'model__learning_rate': [0.1],
+    'model__reg_alpha': [0.5],
+    'model__reg_lambda': [0.5],
+    'model__nthread': [2]
+}
 
 model = GridSearchCV(pipe, param_grid, scoring = 'roc_auc')
 
