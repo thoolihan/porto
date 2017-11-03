@@ -17,6 +17,7 @@ logger = get_logger()
 logger.info("Loading training data into X and y...")
 train = load_file()
 drop_cols = ["ps_calc_{:02d}".format(n) for n in range(2, 15)]
+drop_cols.append("ps_ind_12_bin")
 drop_idx = [i for i, name in enumerate(train.columns.values) if name in drop_cols]
 X = train.drop('target', axis = 1)
 y = train.target
