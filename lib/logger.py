@@ -1,8 +1,8 @@
 import logging
 from datetime import datetime
-from .config import get_config
+import inspect
 
-_name = get_config()["name"]
+_name = inspect.stack()[-1][1].replace(".py", "")
 _start_time = None
 _setup = False
 
@@ -11,11 +11,13 @@ def get_start_time():
 
 _start_time = get_start_time()
 
+# Import and use this
 def get_logger():
     if not(_setup):
         setup_logger()
     return logging.getLogger(_name)
 
+# Never expose this
 # Create a custom logger, because ai gym environment seems to hijack default logger
 def setup_logger(level = logging.DEBUG):
     _setup = True
