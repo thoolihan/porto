@@ -8,10 +8,12 @@ pip install -r requirements.txt
 cp config.json.sample config.json
 emacs config.json # edit any values you like
 ```
-or run both of those with:
+or setup with make:
 ```
 make init
-make config.json
+make venv
+. ~/venvs/porto/bin/activate
+make packages
 ```
 
 There is a `make clean` task to delete any unwanted submission files.
