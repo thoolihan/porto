@@ -58,9 +58,9 @@ write_submission_file(X_test, columns = ['target'], name = 'keras-v2')
 
 logger.info("Finished with time {}".format(datetime.now() - start))
 
-plt.plot(history.history['loss'])
-plt.ylabel("loss")
-plt.xlabel("epoch")
-plt.title("loss by epoch")
 if not(cfg["cli"]):
+    plt.plot(history.history['loss'])
+    plt.ylabel("loss")
+    plt.xlabel("epoch")
+    plt.title("loss by epoch")
     plt.show()
