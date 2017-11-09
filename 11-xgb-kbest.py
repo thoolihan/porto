@@ -21,7 +21,7 @@ X = train.drop('target', axis = 1)
 y = train.target
 n = X.shape[1]
 
-model = Pipeline([('features', SelectKBest(k = 30)),
+model = Pipeline([('features', SelectKBest(k = 40)),
                  ('model', XGBClassifier(learning_rate = .095, reg_alpha = .35, reg_lambda = .76, max_depth = 5))])
 
 logger.info("Predicting score (w/Cross-Val) on X...")
