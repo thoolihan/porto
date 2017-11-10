@@ -1,8 +1,9 @@
 import logging
 from datetime import datetime
+import os
 import inspect
 
-_name = inspect.stack()[-1][1].replace(".py", "")
+_name = os.path.basename(inspect.stack()[-1][1]).replace(".py", "")
 _start_time = None
 _setup = False
 
