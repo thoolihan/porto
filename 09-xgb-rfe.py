@@ -3,8 +3,9 @@ from lib.submit import write_submission_file
 from lib.logger import get_logger
 from lib.config import get_config
 from lib.scoring.gini import gini_normalized
+from sklearn.svm import SVC
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import FunctionTransformer, Imputer
+from sklearn.feature_selection import RFE
 from sklearn.model_selection import cross_val_predict, GridSearchCV
 from scipy.sparse import csc_matrix
 from xgboost import XGBClassifier
@@ -16,19 +17,19 @@ logger = get_logger()
 
 logger.info("Loading training data into X and y...")
 train = load_file()
-drop_cols = ["ps_calc_{:02d}".format(n) for n in range(2, 15)]
-drop_cols.append("ps_ind_12_bin")
-drop_idx = [i for i, name in enumerate(train.columns.values) if name in drop_cols]
 X = train.drop('target', axis = 1)
 y = train.target
+n = X.shape[1]
 
 logger.info("Making GridSearchCV Pipeline...")
-pipe = Pipeline([('drops', FunctionTransformer(lambda mat: np.delete(mat, drop_idx, axis = 1))),
+# kbest
+pipe = Pipeline([('features', RFE(estimator = SVC(kernel="linear"))),
                  ('model', XGBClassifier())])
 param_grid = {
-    'model__learning_rate': [0.0949, 0.095, 0.0951],
-    'model__reg_alpha': [0.345, 0.35, 0.355],
-    'model__reg_lambda': [0.74, 0.75, 0.76],
+    'features__n_features_to_select': [int(p * n) for p in [.5, .7]],
+    'model__learning_rate': [0.095],
+    'model__reg_alpha': [0.35],
+    'model__reg_lambda': [0.76],
     'model__max_depth': [5]
 }
 
@@ -43,9 +44,10 @@ results = cross_val_predict(model.best_estimator_, X, y, cv = 3, method = 'predi
 score = gini_normalized(y, results)
 logger.info("normalized gini score on training set is {}".format(score))
 
+model.best_estimator_.fit(X, y)
 logger.info("Loading and predicting on Test set...")
 test = load_file("test")
 test['target'] = model.best_estimator_.predict_proba(test)[:, 1]
-write_submission_file(test, columns = ['target'], name = 'xgb-v2')
+write_submission_file(test, columns = ['target'], name = 'xgb-rfe')
 
 logger.info("Finished with time {}".format(datetime.now() - start))
