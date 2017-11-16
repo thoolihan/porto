@@ -22,7 +22,7 @@ classifiers = [('xgb', XGBClassifier(learning_rate=0.095, reg_alpha=0.35, reg_la
                ('lgbm', LGBMClassifier()),
                ('rf', RandomForestClassifier())]
 
-model = VotingClassifier(estimators = classifiers, voting = 'hard')
+model = VotingClassifier(estimators = classifiers, voting = 'soft')
 
 logger.info("Fitting model on X...")
 model.fit(X, y)
