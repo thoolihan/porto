@@ -24,8 +24,7 @@ y = train.target
 
 # Create upsample set
 pos_idx = y == 1
-n = len(y)
-upsample_magnitude = int((n - len(pos_idx)) / pos_idx))
+upsample_magnitude = int((len(y) - pos_idx.count()) / pos_idx.count())
 X_up = X
 y_up = y
 for _ in range(upsample_magnitude):
