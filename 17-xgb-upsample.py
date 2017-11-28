@@ -41,7 +41,7 @@ param_grid = {
     'model__learning_rate': [0.07],
     'model__reg_alpha': [8],
     'model__reg_lambda': [0.75],
-    'model__gamma': [3, 4, 5],
+    'model__gamma': [3],
     'model__max_depth': [4]
 }
 
