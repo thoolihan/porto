@@ -23,8 +23,9 @@ drop_idx = drop_cols(X)
 y = train.target
 
 # Create upsample set
-pos_idx = y == 1
-upsample_magnitude = int((len(y) - pos_idx.count()) / pos_idx.count())
+pos_idx = (y == 1)
+pos_count = len(y[pos_idx])
+upsample_magnitude = int((len(y) - pos_count) / pos_count)
 X_up = X
 y_up = y
 for _ in range(upsample_magnitude):
