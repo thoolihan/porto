@@ -5,7 +5,7 @@
   "epochs": 2,
   "batch_size": 100,
   "dropout": 0.1,
-  "folds": 5,
+  "folds": 3,
   "data-files": {
     "train": {
       "bucket": "thoolihan-data",
