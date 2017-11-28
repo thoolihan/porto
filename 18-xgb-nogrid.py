@@ -25,7 +25,9 @@ y = train.target
 # Create upsample set
 pos_idx = (y == 1)
 pos_count = len(y[pos_idx])
-upsample_magnitude = int((len(y) - pos_count) / pos_count)
+# capped at first param, 2nd param would bring to roughly 50/50
+upsample_magnitude = min(2, int((len(y) - pos_count) / pos_count))
+
 X_up = X
 y_up = y
 for _ in range(upsample_magnitude):
@@ -33,9 +35,9 @@ for _ in range(upsample_magnitude):
     y_up = y_up.append(y[pos_idx])
 logger.debug("Value counts for upsample set y_up: {}".format(y_up.value_counts()))
 
-logger.info("Making GridSearchCV Pipeline...")
+logger.info("Making Pipeline...")
 model = Pipeline([('drops', FunctionTransformer(lambda mat: np.delete(mat, drop_idx, axis = 1))),
-                 ('model', XGBClassifier(n_estimators = 550,
+                 ('model', XGBClassifier(n_estimators = 800,
                                          learning_rate = 0.07,
                                          reg_alpha = 8,
                                          reg_lambda = 0.75,
@@ -53,6 +55,6 @@ model.fit(X_up, y_up)
 logger.info("Loading and predicting on Test set...")
 test = load_file("test")
 test['target'] = model.predict_proba(test)[:, 1]
-write_submission_file(test, columns = ['target'], name = 'xgb-est')
+write_submission_file(test, columns = ['target'], name = 'xgb-ups5')
 
 logger.info("Finished with time {:.3f} minutes".format((time.time() - start)/60.0))
