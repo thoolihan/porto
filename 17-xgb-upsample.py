@@ -65,4 +65,4 @@ test = load_file("test")
 test['target'] = model.predict_proba(test)[:, 1]
 write_submission_file(test, columns = ['target'], name = 'xgb-est')
 
-logger.info("Finished with time {:.3f} minutes".format((time.time() - start)) / 60)
+logger.info("Finished with time {:.3f} minutes".format((time.time() - start)/60.0))
