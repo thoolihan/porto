@@ -27,11 +27,11 @@ pipe = Pipeline([('drops', FunctionTransformer(lambda mat: np.delete(mat, drop_i
                  ('model', XGBClassifier())])
 param_grid = {
     'model__n_estimators': [400],
-    'model__learning_rate': [0.07, 0.095],
+    'model__learning_rate': [0.07],
     'model__reg_alpha': [8],
     'model__reg_lambda': [0.75, 1.3],
-    'model__gamma': [0, 1],
-    'model__max_depth': [5]
+    'model__gamma': [0, 1, 5],
+    'model__max_depth': [4, 5]
 }
 
 model = GridSearchCV(pipe, param_grid, cv = cfg["folds"], scoring = 'roc_auc')
@@ -41,7 +41,7 @@ model.fit(X, y)
 logger.info("Best Params: {}".format(model.best_params_))
 
 logger.info("Predicting score (w/Cross-Val) on X...")
-results = cross_val_predict(model.best_estimator_, X, y, cv = 3, method = 'predict_proba')[:, 1]
+results = cross_val_predict(model.best_estimator_, X, y, cv = cfg["folds"], method = 'predict_proba')[:, 1]
 score = gini_normalized(y, results)
 logger.info("normalized gini score on training set is {}".format(score))
 
