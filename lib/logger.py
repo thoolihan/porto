@@ -39,4 +39,6 @@ def setup_logger(level = logging.DEBUG):
 
     log.setLevel(level)
     log.propagate = False
+    log.debug("Log setup")
+    log.info("Running on {}".format(":".join(os.uname())))
     return log
