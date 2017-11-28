@@ -10,9 +10,9 @@ from sklearn.model_selection import cross_val_predict, GridSearchCV
 from scipy.sparse import csc_matrix
 from xgboost import XGBClassifier
 import numpy as np
-from datetime import datetime
+import time
 
-start = datetime.now()
+start = time.time()
 logger = get_logger()
 cfg = get_config()
 
@@ -30,6 +30,7 @@ param_grid = {
     'model__learning_rate': [0.07, 0.095],
     'model__reg_alpha': [8],
     'model__reg_lambda': [0.75, 1.3],
+    'model__gamma': [0, 1],
     'model__max_depth': [5]
 }
 
@@ -47,6 +48,6 @@ logger.info("normalized gini score on training set is {}".format(score))
 logger.info("Loading and predicting on Test set...")
 test = load_file("test")
 test['target'] = model.best_estimator_.predict_proba(test)[:, 1]
-write_submission_file(test, columns = ['target'], name = 'xgb-v2')
+write_submission_file(test, columns = ['target'], name = 'xgb-final')
 
-logger.info("Finished with time {}".format(datetime.now() - start))
+logger.info("Finished with time {}".format(time.time() - start))
