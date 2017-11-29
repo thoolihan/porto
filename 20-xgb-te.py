@@ -8,6 +8,7 @@ from lib.porto.features import drop_cols
 from lib.porto.feature_type import get_cat_features
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import cross_val_predict
+from sklearn.metrics import classification_report
 from xgboost import XGBClassifier
 import numpy as np
 import time
@@ -40,6 +41,9 @@ logger.info("Predicting score (w/Cross-Val) on X...")
 results = cross_val_predict(model, X, y, cv = cfg["folds"], method = 'predict_proba')[:, 1]
 score = gini_normalized(y, results)
 logger.info("normalized gini score on training set is {}".format(score))
+
+logger.info("Classification report on Cross-Val results...")
+print(classification_report(y, results))
 
 logger.info("Fitting model on upscaled X...")
 model.fit(X, y)
