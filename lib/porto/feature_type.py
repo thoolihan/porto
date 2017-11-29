@@ -14,3 +14,8 @@ def get_cat_features_idx(df):
     logger.debug("Identified categorical columns: {}".format(icols))
     return icols
 
+def get_cat_features(df):
+    columns = list(df.columns.values)
+    cols = [col for i, col in enumerate(columns) if col[-3:] == "cat"]
+    logger.debug("Identified categorical columns: {}".format(cols))
+    return cols
