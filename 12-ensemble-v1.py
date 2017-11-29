@@ -26,7 +26,7 @@ cat_columns = get_cat_features_idx(X)
 
 logger.info("Making Ensemble...")
 classifiers = [('xgb', XGBClassifier(learning_rate=0.07, reg_alpha=8, reg_lambda=0.75, max_depth=4, n_estimators = 800, gamma = 3)),
-               ('lgbm', LGBMClassifier(learning_rate = 0.018, max_depth = 6, num_leaves = 11, col_sample_by_tree=0.85)),
+               ('lgbm', LGBMClassifier(learning_rate = 0.018, max_depth = 6, num_leaves = 11, colsample_bytree=0.85)),
                ('rf', RandomForestClassifier(n_estimators = 200, criterion = 'gini'))]
 
 model = Pipeline([('impute', Imputer(missing_values = -1, strategy = "most_frequent")),
