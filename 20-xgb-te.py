@@ -1,14 +1,13 @@
-from lib.data import load_file, make_missing_zero
 from lib.submit import write_submission_file
 from lib.logger import get_logger
+from lib.data import load_file
 from lib.config import get_config
 from lib.scoring.gini import gini_normalized
+from lib.target_encode import TargetEncoder
 from lib.porto.features import drop_cols
-from lib.porto.feature_type import get_bin_cat_features, get_cat_features_idx
+from lib.porto.feature_type import get_cat_features
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import FunctionTransformer, Imputer, OneHotEncoder
-from sklearn.model_selection import cross_val_predict, GridSearchCV
-from scipy.sparse import csc_matrix
+from sklearn.model_selection import cross_val_predict
 from xgboost import XGBClassifier
 import numpy as np
 import time
@@ -23,7 +22,11 @@ X = train.drop('target', axis = 1)
 drop_cols = drop_cols(X, names = True)
 X.drop(drop_cols, axis = 1, inplace = True)
 y = train.target
-cat_columns = get_cat_features_idx(X)
+cat_columns = get_cat_features(X)
+
+logger.info("Making Target Encoder...")
+tenc = TargetEncoder(columns = cat_columns)
+X = tenc.fit_transform(X, y)
 
 logger.info("Making Pipeline...")
 model = Pipeline([('model', XGBClassifier(n_estimators = 800,
@@ -44,6 +47,7 @@ model.fit(X, y)
 logger.info("Loading and predicting on Test set...")
 test = load_file("test")
 test.drop(drop_cols, axis = 1, inplace = True)
+test = tenc.transform(test)
 test['target'] = model.predict_proba(test)[:, 1]
 write_submission_file(test, columns = ['target'], name = 'xgb-imp-ohe-ups2')
 
