@@ -34,9 +34,9 @@ upsample_magnitude = min(2, int((len(y) - pos_count) / pos_count))
 
 X_up = X
 y_up = y
-for _ in range(upsample_magnitude):
-    X_up = X_up.append(X[pos_idx])
-    y_up = y_up.append(y[pos_idx])
+# for _ in range(upsample_magnitude):
+#     X_up = X_up.append(X[pos_idx])
+#     y_up = y_up.append(y[pos_idx])
 logger.debug("Value counts for upsample set y_up: {}".format(y_up.value_counts()))
 
 logger.info("Making Pipeline...")
