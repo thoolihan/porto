@@ -25,7 +25,7 @@ class TargetEncoder(BaseEstimator, TransformerMixin):
                 averages,
                 left_on = trn_series.name,
                 right_index = True,
-                how='left')['target'].rename(trn_series.name + '_mean').fillna(averages[0])
+                how='left')['target'].rename(trn_series.name + '_mean').fillna(0)
             # pd.merge does not keep the index so restore it
             ft_trn_series.index = trn_series.index
             X[col] =  self.add_noise(ft_trn_series, self.noise_level)
