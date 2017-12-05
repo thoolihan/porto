@@ -3,6 +3,8 @@ from lib.submit import write_submission_file
 from lib.logger import get_logger
 from lib.config import get_config
 from lib.scoring.gini import gini_normalized
+from lib.target_encode import TargetEncoder
+from lib.porto.feature_type import get_cat_features
 from sklearn.model_selection import train_test_split
 from datetime import datetime
 from keras.models import Sequential
@@ -21,6 +23,13 @@ X = train.drop(['target'], axis = 1)
 X["bias"] = 1
 y = train.target
 n = X.shape[1]
+
+logger.info("Making Target Encoder...")
+cat_columns = get_cat_features(X)
+tenc = TargetEncoder(columns = cat_columns)
+X = tenc.fit_transform(X, y)
+
+logger.info("Splitting data...")
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size = .3)
 
 logger.info("Creating Keras Model...")
@@ -29,7 +38,7 @@ model.add(Dense(units = 128, input_dim = n))
 model.add(Activation('relu'))
 model.add(Dropout(cfg["dropout"]))
 
-for _ in range(13):
+for _ in range(25):
     model.add(Dense(units = 128))
     model.add(Activation('relu'))
     model.add(Dropout(cfg["dropout"]))
@@ -53,6 +62,7 @@ logger.info("normalized gini score on validation set is {}".format(score))
 logger.info("Loading and predicting on Test set...")
 X_test = load_file("test")
 X_test["bias"] = 1
+X_test = tenc.transform(X_test)
 X_test['target'] = model.predict(X_test.as_matrix())
 write_submission_file(X_test, columns = ['target'], name = 'keras-v2')
 
